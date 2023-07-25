@@ -3,6 +3,7 @@ package runhttp
 import (
 	"context"
 	"errors"
+	"io"
 	"net"
 	"net/http"
 	"os/signal"
@@ -67,4 +68,11 @@ func RunServer(ctx context.Context, srv *http.Server, crtCfg *AutocertConfig) er
 		return err
 	}
 	return nil
+}
+
+// ----------------------------------------------------------------------------
+
+// RobotsDisallowAll is an http.HandlerFunc to serve disallow-all robots.txt.
+func RobotsDisallowAll(w http.ResponseWriter, r *http.Request) {
+	_, _ = io.WriteString(w, "User-agent: *\nDisallow: /\n")
 }
